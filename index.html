@@ -265,52 +265,91 @@
         </div>
         <p class="chart-note">VR's <span class="kw-perception">perception gap</span> makes precise gripper control hard; Mobile ALOHA's <span class="kw-mobility">powered base constrains the operator</span>, who pauses before grasping the chair.</p>
       </div>
+
+      <div class="sub-block" id="cap-align" aria-labelledby="processing-title">
+        <div class="sub-block__head">
+          <h3 class="sub-block__title" id="processing-title">Deployment-aligned demonstration processing</h3>
+          <p class="sub-block__text"><span class="kw">Deployment-aligned demonstration processing</span> addresses visual and control discrepancies between demonstration and deployment. In <span class="kw">visual processing</span>, CaRE-Ego detects the operator's hands, SAM2 propagates masks across frames, and DiffuEraser reconstructs the masked regions; hand removal improves Push Chair success <span class="kw">from 55% to 85%</span>. <span class="kw">Base motion alignment</span> fits an affine mapping from platform motion to deployment-compatible base velocities and estimates the action–state delay for temporal alignment.</p>
+        </div>
+        <div class="fig-row fig-row--6-10">
+          <figure class="figure">
+            <p class="fig-row__label">Visual processing</p>
+            <img class="figure__img" src="assets/figures/fig6-visual-processing.jpg" loading="lazy" alt="Two example frames processed by ego hand detection, video segmentation and inpainting.">
+            <figcaption class="figure__caption">Fig. 7 · Ego hand detection → video segmentation → inpainting.</figcaption>
+          </figure>
+          <figure class="figure">
+            <p class="fig-row__label">Base motion alignment</p>
+            <img class="figure__img" src="assets/figures/fig10-failure-cases.jpg" loading="lazy" alt="Failure cases: arm motion faster than base motion, and base travelling too far under synchronous inference.">
+            <figcaption class="figure__caption">Fig. 6 · Failures without latency compensation (a) and with synchronous inference (b).</figcaption>
+          </figure>
+        </div>
+      </div>
     </div>
   </section>
   <!-- END MODULE: data collection -->
 
-  <!-- MODULE: task demos (grey band) — player + thumbnails, list shown under the player.
-       Add a demo: duplicate a .thumb and set data-src / data-poster / data-caption. -->
-  <section class="section section--band" id="demos" aria-labelledby="demos-title">
-    <div class="section-head">
-      <h2 class="section-title" id="demos-title">Policy Rollouts</h2>
-      <p class="section-lead demos__desc">Autonomous rollouts of π<sub>0.5</sub> policies fine-tuned on HALO demonstrations, one policy per task. Playback speed is printed in the corner of each clip.</p>
+  <!-- MODULE: capabilities (grey band) with sticky side nav (>= 1280px). -->
+  <section class="section section--band" id="capabilities" aria-labelledby="cap-title">
+    <div class="section-head cap-head">
+      <h2 class="cap-title" id="cap-title">What the Policies Learn</h2>
+      <p class="section-lead">Precise bimanual manipulation, coordinated base and arm motion over long horizons, and generalization beyond the layout seen during collection.</p>
     </div>
-    <div class="demos__stage demos__stage--row" data-demo>
-      <div class="media demos__player">
-        <video data-demo-player data-autoplay muted loop playsinline preload="none"
-               data-src="assets/video/supplementary.mp4?v=20261105opening#t=49.833333,62.208333" poster="assets/posters/push_chair.jpg" aria-label="Push Chair"></video>
+
+    <div class="cap-layout">
+      <nav class="cap-nav" aria-label="Capabilities navigation" data-spy>
+        <div class="cap-nav__inner">
+          <a class="cap-nav__item is-active" href="#cap-general"><span class="cap-nav__title">Generalization</span><span class="cap-nav__sub">Initial-pose variations and unseen environments</span></a>
+          <a class="cap-nav__item" href="#cap-dexterity"><span class="cap-nav__title">Dexterity</span><span class="cap-nav__sub">Zip-Tie Fastening and Disassemble Lego</span></a>
+          <a class="cap-nav__item" href="#cap-long"><span class="cap-nav__title">Long-horizon mobile manipulation</span><span class="cap-nav__sub">Six stages, repeated</span></a>
+        </div>
+      </nav>
+
+      <div class="cap-stack">
+        <article class="cap-card" id="cap-general">
+          <h3 class="cap-card__title cap-card__title--tight">Generalization of mobile manipulation</h3>
+          <p class="cap-card__text">Push Chair asks the robot to grasp a chair with both grippers while moving at about walking speed (~0.7 m/s) and push it under a table. The table never moved during data collection, yet the policy handles <span class="kw">2–3 m changes in its starting pose</span> (Mobile ALOHA used 5–10 cm) and <span class="kw">unseen environments</span>. Velocity-based base actions favour a reactive pattern that keeps driving the chair toward the table rather than memorizing a global pose.</p>
+          <div class="pair">
+            <div>
+              <div class="pair__label">2–3 m initial-pose variation</div>
+              <div class="media"><video data-src="assets/video/supplementary.mp4?v=20261105opening#t=62.208333,74.791667" poster="assets/posters/push_chair_spatial.jpg" data-autoplay muted loop playsinline controls preload="none" aria-label="Push Chair from distant starting positions"></video></div>
+            </div>
+            <div>
+              <div class="pair__label">Unseen environment</div>
+              <div class="media"><video data-src="assets/video/supplementary.mp4?v=20261105opening#t=74.791667,84.250000" poster="assets/posters/push_chair_env.jpg" data-autoplay muted loop playsinline controls preload="none" aria-label="Push Chair in an unseen office"></video></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="cap-card" id="cap-dexterity">
+          <h3 class="cap-card__title cap-card__title--tight">Dexterity</h3>
+          <p class="cap-card__text">Zip-Tie Fastening chains picking, handover, folding, insertion, fastening and placement on a short, small zip tie. The HALO policy succeeds in <span class="kw">30% of 10 trials</span> (41 s on average); policies trained on Mobile ALOHA and VR demonstrations achieve 0% success. In Disassemble Lego the policy succeeds <span class="kw">30 of 40 times</span>, adapts its separation strategy to randomized structures, and generalizes to unseen configurations.</p>
+          <div class="pair">
+            <div>
+              <div class="pair__label">Zip-Tie Fastening</div>
+              <div class="media"><video data-src="assets/video/supplementary.mp4?v=20261105opening#t=84.250000,101.250000" poster="assets/posters/zip_tie.jpg" data-autoplay muted loop playsinline controls preload="none" aria-label="Zip-Tie Fastening demonstration"></video></div>
+            </div>
+            <div>
+              <div class="pair__label">Disassemble Lego</div>
+              <div class="media"><video data-src="assets/video/supplementary.mp4?v=20261105opening#t=101.250000,126.916667" poster="assets/posters/lego.jpg" data-autoplay muted loop playsinline controls preload="none" aria-label="Disassemble Lego demonstration"></video></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="cap-card" id="cap-long">
+          <h3 class="cap-card__title cap-card__title--tight">Long-horizon mobile manipulation</h3>
+          <p class="cap-card__text">In the long-horizon mobile manipulation task, the robot retrieves a box from a shelf, loads objects into it, lifts it with both arms, drives to a conveyor, places it, and returns to repeat. Despite many forward, backward and turning base motions, the policy <span class="kw">brings the base back to its starting pose</span> so the loop can run again: <span class="kw">11 of 15 trials succeed (73.3%)</span>.</p>
+          <div class="sub-block">
+            <figure class="figure">
+              <div class="media"><video data-src="assets/video/supplementary.mp4?v=20261105opening#t=146.958333,186.875000" poster="assets/posters/box_conveyor.jpg" data-autoplay muted loop playsinline controls preload="none" aria-label="Long-horizon mobile manipulation six-stage demonstration"></video></div>
+              <figcaption class="figure__caption">Long-horizon mobile manipulation · Retrieve, load, lift, transport, place, and return. 3×.</figcaption>
+            </figure>
+          </div>
+        </article>
+
       </div>
-      <div class="demos__list" role="group" aria-label="Choose a task">
-        <button class="thumb" type="button" aria-pressed="true" data-src="assets/video/supplementary.mp4?v=20261105opening#t=49.833333,62.208333" data-poster="assets/posters/push_chair.jpg"
-                data-caption="Push Chair · grasp the chair while moving at walking speed, carry it to the desk and push it under. 1×.">
-          <img src="assets/posters/push_chair.jpg" alt="" loading="lazy"><span class="thumb__label">Push Chair</span>
-        </button>
-        <button class="thumb" type="button" aria-pressed="false" data-src="assets/video/supplementary.mp4?v=20261105opening#t=84.250000,101.250000" data-poster="assets/posters/zip_tie.jpg"
-                data-caption="Zip-Tie Fastening · pick, hand over, fold, insert, fasten and place a short zip tie. 1×.">
-          <img src="assets/posters/zip_tie.jpg" alt="" loading="lazy"><span class="thumb__label">Zip-Tie Fastening</span>
-        </button>
-        <button class="thumb" type="button" aria-pressed="false" data-src="assets/video/supplementary.mp4?v=20261105opening#t=101.250000,126.916667" data-poster="assets/posters/lego.jpg"
-                data-caption="Disassemble Lego · take apart a randomized four-piece structure and sort each piece into the bin of its colour. 1×.">
-          <img src="assets/posters/lego.jpg" alt="" loading="lazy"><span class="thumb__label">Disassemble Lego</span>
-        </button>
-        <button class="thumb" type="button" aria-pressed="false" data-src="assets/video/supplementary.mp4?v=20261105opening#t=126.916667,146.958333" data-poster="assets/posters/lego_strategy.jpg"
-                data-caption="Disassemble Lego, another configuration · the same policy switches to a different separation strategy. 1.5×.">
-          <img src="assets/posters/lego_strategy.jpg" alt="" loading="lazy"><span class="thumb__label">Disassemble Lego · another configuration</span>
-        </button>
-        <button class="thumb" type="button" aria-pressed="false" data-src="assets/video/supplementary.mp4?v=20261105opening#t=146.958333,186.875000" data-poster="assets/posters/box_conveyor.jpg"
-                data-caption="Long-horizon mobile manipulation · six stages: retrieve a box, load objects, lift it with both arms, drive to the conveyor, place it, return and repeat. 3×.">
-          <img src="assets/posters/box_conveyor.jpg" alt="" loading="lazy"><span class="thumb__label">Long-horizon mobile manipulation</span>
-        </button>
-        <button class="thumb" type="button" aria-pressed="false" data-src="assets/video/supplementary.mp4?v=20261105opening#t=42.708333,49.833333" data-poster="assets/posters/lift_box.jpg"
-                data-caption="Lift Box · bimanual lift of a crate from a shelf. 1.3×.">
-          <img src="assets/posters/lift_box.jpg" alt="" loading="lazy"><span class="thumb__label">Lift Box</span>
-        </button>
-      </div>
-      <p class="demos__caption" data-demo-caption aria-live="polite">Push Chair · grasp the chair while moving at walking speed, carry it to the desk and push it under. 1×.</p>
     </div>
   </section>
-  <!-- END MODULE: task demos -->
+  <!-- END MODULE: capabilities -->
 
   <!-- MODULE: quantitative results. page.js draws each chart from its <table>. -->
   <section class="section" id="results" aria-labelledby="results-title">
@@ -384,88 +423,6 @@
     </div>
   </section>
   <!-- END MODULE: quantitative results -->
-
-  <!-- MODULE: capabilities (grey band) with sticky side nav (>= 1280px). -->
-  <section class="section section--band" id="capabilities" aria-labelledby="cap-title">
-    <div class="section-head cap-head">
-      <h2 class="cap-title" id="cap-title">What the Policies Learn</h2>
-      <p class="section-lead">Precise bimanual manipulation, coordinated base and arm motion over long horizons, and generalization beyond the layout seen during collection.</p>
-    </div>
-
-    <div class="cap-layout">
-      <nav class="cap-nav" aria-label="Capabilities navigation" data-spy>
-        <div class="cap-nav__inner">
-          <a class="cap-nav__item is-active" href="#cap-general"><span class="cap-nav__title">Generalization</span><span class="cap-nav__sub">Initial-pose variations and unseen environments</span></a>
-          <a class="cap-nav__item" href="#cap-dexterity"><span class="cap-nav__title">Dexterity</span><span class="cap-nav__sub">Zip-Tie Fastening and Disassemble Lego</span></a>
-          <a class="cap-nav__item" href="#cap-long"><span class="cap-nav__title">Long-horizon mobile manipulation</span><span class="cap-nav__sub">Six stages, repeated</span></a>
-          <a class="cap-nav__item" href="#cap-align"><span class="cap-nav__title">Demonstration processing</span><span class="cap-nav__sub">Visual processing and base motion alignment</span></a>
-        </div>
-      </nav>
-
-      <div class="cap-stack">
-        <article class="cap-card" id="cap-general">
-          <h3 class="cap-card__title cap-card__title--tight">Generalization of mobile manipulation</h3>
-          <p class="cap-card__text">Push Chair asks the robot to grasp a chair with both grippers while moving at about walking speed (~0.7 m/s) and push it under a table. The table never moved during data collection, yet the policy handles <span class="kw">2–3 m changes in its starting pose</span> (Mobile ALOHA used 5–10 cm) and <span class="kw">unseen environments</span>. Velocity-based base actions favour a reactive pattern that keeps driving the chair toward the table rather than memorizing a global pose.</p>
-          <div class="pair">
-            <div>
-              <div class="pair__label">2–3 m initial-pose variation</div>
-              <div class="media"><video data-src="assets/video/supplementary.mp4?v=20261105opening#t=62.208333,74.791667" poster="assets/posters/push_chair_spatial.jpg" data-autoplay muted loop playsinline controls preload="none" aria-label="Push Chair from distant starting positions"></video></div>
-            </div>
-            <div>
-              <div class="pair__label">Unseen environment</div>
-              <div class="media"><video data-src="assets/video/supplementary.mp4?v=20261105opening#t=74.791667,84.250000" poster="assets/posters/push_chair_env.jpg" data-autoplay muted loop playsinline controls preload="none" aria-label="Push Chair in an unseen office"></video></div>
-            </div>
-          </div>
-        </article>
-
-        <article class="cap-card" id="cap-dexterity">
-          <h3 class="cap-card__title cap-card__title--tight">Dexterity</h3>
-          <p class="cap-card__text">Zip-Tie Fastening chains picking, handover, folding, insertion, fastening and placement on a short, small zip tie. The HALO policy succeeds in <span class="kw">30% of 10 trials</span> (41 s on average); policies trained on Mobile ALOHA and VR demonstrations achieve 0% success. In Disassemble Lego the policy succeeds <span class="kw">30 of 40 times</span>, adapts its separation strategy to randomized structures, and generalizes to unseen configurations.</p>
-          <div class="pair">
-            <div>
-              <div class="pair__label">Zip-Tie Fastening</div>
-              <div class="media"><video data-src="assets/video/supplementary.mp4?v=20261105opening#t=84.250000,101.250000" poster="assets/posters/zip_tie.jpg" data-autoplay muted loop playsinline controls preload="none" aria-label="Zip-Tie Fastening demonstration"></video></div>
-            </div>
-            <div>
-              <div class="pair__label">Disassemble Lego</div>
-              <div class="media"><video data-src="assets/video/supplementary.mp4?v=20261105opening#t=101.250000,126.916667" poster="assets/posters/lego.jpg" data-autoplay muted loop playsinline controls preload="none" aria-label="Disassemble Lego demonstration"></video></div>
-            </div>
-          </div>
-        </article>
-
-        <article class="cap-card" id="cap-long">
-          <h3 class="cap-card__title cap-card__title--tight">Long-horizon mobile manipulation</h3>
-          <p class="cap-card__text">In the long-horizon mobile manipulation task, the robot retrieves a box from a shelf, loads objects into it, lifts it with both arms, drives to a conveyor, places it, and returns to repeat. Despite many forward, backward and turning base motions, the policy <span class="kw">brings the base back to its starting pose</span> so the loop can run again: <span class="kw">11 of 15 trials succeed (73.3%)</span>.</p>
-          <div class="sub-block">
-            <figure class="figure">
-              <div class="media"><video data-src="assets/video/supplementary.mp4?v=20261105opening#t=146.958333,186.875000" poster="assets/posters/box_conveyor.jpg" data-autoplay muted loop playsinline controls preload="none" aria-label="Long-horizon mobile manipulation six-stage demonstration"></video></div>
-              <figcaption class="figure__caption">Long-horizon mobile manipulation · Retrieve, load, lift, transport, place, and return. 3×.</figcaption>
-            </figure>
-          </div>
-        </article>
-
-        <article class="cap-card" id="cap-align">
-          <h3 class="cap-card__title cap-card__title--tight">Deployment-aligned demonstration processing</h3>
-          <p class="cap-card__text"><span class="kw">Deployment-aligned demonstration processing</span> addresses visual and control discrepancies between demonstration and deployment. In <span class="kw">visual processing</span>, CaRE-Ego detects the operator's hands, SAM2 propagates masks across frames, and DiffuEraser reconstructs the masked regions; hand removal improves Push Chair success <span class="kw">from 55% to 85%</span>. <span class="kw">Base motion alignment</span> fits an affine mapping from platform motion to deployment-compatible base velocities and estimates the action–state delay for temporal alignment.</p>
-          <div class="sub-block">
-            <div class="fig-row fig-row--6-10">
-              <figure class="figure">
-                <p class="fig-row__label">Visual processing</p>
-                <img class="figure__img" src="assets/figures/fig6-visual-processing.jpg" loading="lazy" alt="Two example frames processed by ego hand detection, video segmentation and inpainting.">
-                <figcaption class="figure__caption">Fig. 7 · Ego hand detection → video segmentation → inpainting.</figcaption>
-              </figure>
-              <figure class="figure">
-                <p class="fig-row__label">Base motion alignment</p>
-                <img class="figure__img" src="assets/figures/fig10-failure-cases.jpg" loading="lazy" alt="Failure cases: arm motion faster than base motion, and base travelling too far under synchronous inference.">
-                <figcaption class="figure__caption">Fig. 6 · Failures without latency compensation (a) and with synchronous inference (b).</figcaption>
-              </figure>
-            </div>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-  <!-- END MODULE: capabilities -->
 
   <!-- MODULE: supplementary video (grey band). Swap for a YouTube embed if you prefer (see README). -->
   <section class="section section--band" id="video" aria-labelledby="video-title">
